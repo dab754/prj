@@ -31,6 +31,11 @@ export class LoanService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  // Get loan by ID
+  getLoanById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+
   // Get loan history by status
   getLoanHistory(freelancerId: number, status?: string): Observable<any[]> {
     let params = new HttpParams()
