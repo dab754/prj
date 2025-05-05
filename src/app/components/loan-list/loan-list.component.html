@@ -1,0 +1,30 @@
+
+<div class="loan-list-container">
+  <h2>Loans</h2>
+  <table class="loan-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Purpose</th>
+        <th>Request Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let loan of loans">
+        <td>{{loan.id}}</td>
+        <td>${{loan.amount}}</td>
+        <td>{{loan.status}}</td>
+        <td>{{loan.purpose}}</td>
+        <td>{{loan.requestDate | date}}</td>
+        <td class="actions">
+          <button (click)="onEdit(loan.id)" class="btn edit">Edit</button>
+          <button (click)="onDetails(loan.id)" class="btn details">Details</button>
+          <button (click)="onDelete(loan.id)" class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
