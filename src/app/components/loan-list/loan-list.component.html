@@ -26,7 +26,7 @@
         <td>{{loan.freelancer.id}}</td>
         <td>
           <a [routerLink]="['/loans', loan.id, 'edit']" class="btn edit">Edit</a>
-          <button (click)="onDelete(loan.id)" class="btn delete">Delete</button>
+          <button (click)="onDelete(loan.id!)" class="btn delete">Delete</button>
         </td>
       </tr>
     </tbody>

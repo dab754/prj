@@ -9,7 +9,7 @@ import { LoanService } from '../../services/loan.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './loan-repayment.component.html',
-  styleUrls: ['./loan-repayment.component.css']
+  styleUrl: './loan-repayment.component.scss'
 })
 export class LoanRepaymentComponent {
   @Input() loanId!: number;

@@ -9,7 +9,7 @@ import { LoanService } from '../../services/loan.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './loan-recommendation.component.html',
-  styleUrls: ['./loan-recommendation.component.css']
+  styleUrl: './loan-recommendation.component.scss'
 })
 export class LoanRecommendationComponent {
   recommendationForm: FormGroup;
