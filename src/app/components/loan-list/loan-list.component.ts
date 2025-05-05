@@ -46,8 +46,8 @@ export class LoanListComponent implements OnInit {
     );
   }
 
-  onDetails(id: number): void {
-    // TODO: Implement details functionality
-    console.log('View details for loan:', id);
+  onView(id: number): void {
+    // Navigate to view route when implemented
+    console.log('View loan:', id);
   }
 }
