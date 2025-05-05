@@ -7,5 +7,6 @@ export const routes: Routes = [
   { path: 'loans', component: LoanListComponent },
   { path: 'loans/new', component: LoanFormComponent },
   { path: 'loans/edit/:id', component: LoanFormComponent },
+  { path: 'loans/simulator', component: LoanSimulatorComponent },
   { path: '', redirectTo: '/loans', pathMatch: 'full' }
 ];

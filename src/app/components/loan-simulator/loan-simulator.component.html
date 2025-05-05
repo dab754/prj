@@ -1,0 +1,52 @@
+
+<div class="simulator-container">
+  <h2>Loan Simulator</h2>
+  <form [formGroup]="simulatorForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="loanAmount">Loan Amount</label>
+      <input
+        type="number"
+        id="loanAmount"
+        formControlName="loanAmount"
+        class="form-control"
+        placeholder="Enter loan amount"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="monthlyIncome">Monthly Income</label>
+      <input
+        type="number"
+        id="monthlyIncome"
+        formControlName="monthlyIncome"
+        class="form-control"
+        placeholder="Enter monthly income"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="repaymentRatio">Repayment Ratio</label>
+      <input
+        type="number"
+        id="repaymentRatio"
+        formControlName="repaymentRatio"
+        class="form-control"
+        step="0.1"
+        min="0"
+        max="1"
+      >
+    </div>
+
+    <button type="submit" class="submit-btn" [disabled]="!simulatorForm.valid">
+      Simulate Loan
+    </button>
+  </form>
+
+  <div class="result" *ngIf="simulationResult">
+    <h3>Simulation Result</h3>
+    <p>{{simulationResult.message}}</p>
+    <p>Monthly Repayment: ${{simulationResult.monthlyRepayment}}</p>
+    <p>Duration (Months): {{simulationResult.durationMonths}}</p>
+    <p>Duration (Weeks): {{simulationResult.durationWeeks}}</p>
+  </div>
+</div>
