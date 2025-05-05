@@ -1,7 +1,12 @@
 
 <div class="loan-list-container">
   <h2>Loans</h2>
-  <table class="loan-table">
+  
+  <div class="error-message" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <table class="loan-table" *ngIf="loans.length > 0">
     <thead>
       <tr>
         <th>ID</th>
@@ -19,12 +24,17 @@
         <td>{{loan.purpose}}</td>
         <td>{{loan.status}}</td>
         <td>{{loan.freelancer.id}}</td>
-        <td class="actions">
-          <button (click)="onView(loan.id)" class="btn view">View</button>
-          <button (click)="onEdit(loan.id)" class="btn edit">Edit</button>
+        <td>
+          <a [routerLink]="['/loans', loan.id, 'edit']" class="btn edit">Edit</a>
           <button (click)="onDelete(loan.id)" class="btn delete">Delete</button>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div class="no-loans" *ngIf="loans.length === 0">
+    No loans found.
+  </div>
+
+  <a [routerLink]="['/loans/new']" class="btn create">Create New Loan</a>
 </div>

@@ -1,17 +1,20 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { LoanService } from '../../services/loan.service';
+import { Loan } from '../../models/loan.model';
 
 @Component({
   selector: 'app-loan-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './loan-list.component.html',
-  styleUrls: ['./loan-list.component.css']
+  styleUrl: './loan-list.component.scss'
 })
 export class LoanListComponent implements OnInit {
-  loans: any[] = [];
+  loans: Loan[] = [];
+  error: string | null = null;
 
   constructor(private loanService: LoanService) {}
 
@@ -20,34 +23,28 @@ export class LoanListComponent implements OnInit {
   }
 
   loadLoans(): void {
-    this.loanService.getAllLoans().subscribe(
-      (data) => {
+    this.loanService.getAllLoans().subscribe({
+      next: (data) => {
         this.loans = data;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching loans:', error);
+        this.error = 'Failed to load loans. Please try again later.';
       }
-    );
-  }
-
-  onEdit(id: number): void {
-    // TODO: Implement edit functionality
-    console.log('Edit loan:', id);
+    });
   }
 
   onDelete(id: number): void {
-    this.loanService.deleteLoan(id).subscribe(
-      () => {
-        this.loans = this.loans.filter(loan => loan.id !== id);
-      },
-      (error) => {
-        console.error('Error deleting loan:', error);
-      }
-    );
-  }
-
-  onView(id: number): void {
-    // Navigate to view route when implemented
-    console.log('View loan:', id);
+    if (confirm('Are you sure you want to delete this loan?')) {
+      this.loanService.deleteLoan(id).subscribe({
+        next: () => {
+          this.loans = this.loans.filter(loan => loan.id !== id);
+        },
+        error: (error) => {
+          console.error('Error deleting loan:', error);
+          this.error = 'Failed to delete loan. Please try again later.';
+        }
+      });
+    }
   }
 }
