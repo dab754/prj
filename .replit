@@ -8,3 +8,14 @@ channel = "stable-24_05"
 [[ports]]
 localPort = 4200
 externalPort = 80
+
+[workflows]
+
+[[workflows.workflow]]
+name = "Run Backend"
+author = 42318350
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd loan && ./mvnw spring-boot:run"
