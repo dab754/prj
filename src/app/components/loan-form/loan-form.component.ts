@@ -3,6 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { LoanService } from '../../services/loan.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-loan-form',
@@ -14,26 +15,29 @@ import { LoanService } from '../../services/loan.service';
 export class LoanFormComponent implements OnInit {
   @Input() loanId?: number;
   loanForm: FormGroup;
+  statuses = ['PENDING', 'APPROVED', 'REJECTED'];
 
   constructor(
     private fb: FormBuilder,
-    private loanService: LoanService
+    private loanService: LoanService,
+    private router: Router
   ) {
     this.loanForm = this.fb.group({
       amount: ['', [Validators.required, Validators.min(0)]],
       purpose: ['', Validators.required],
+      status: ['PENDING', Validators.required],
       freelancerId: ['', Validators.required]
     });
   }
 
   ngOnInit() {
     if (this.loanId) {
-      // Load existing loan data if editing
       this.loanService.getLoanById(this.loanId).subscribe(
         loan => {
           this.loanForm.patchValue({
             amount: loan.amount,
             purpose: loan.purpose,
+            status: loan.status,
             freelancerId: loan.freelancer.id
           });
         }
@@ -43,21 +47,22 @@ export class LoanFormComponent implements OnInit {
 
   onSubmit() {
     if (this.loanForm.valid) {
-      const loanData = this.loanForm.value;
+      const formData = {
+        ...this.loanForm.value,
+        freelancer: { id: this.loanForm.value.freelancerId }
+      };
       
       if (this.loanId) {
-        this.loanService.updateLoan(this.loanId, loanData).subscribe({
+        this.loanService.updateLoan(this.loanId, formData).subscribe({
           next: () => {
-            console.log('Loan updated successfully');
-            this.loanForm.reset();
+            this.router.navigate(['/loans']);
           },
           error: (error) => console.error('Error updating loan:', error)
         });
       } else {
-        this.loanService.createLoan(loanData).subscribe({
+        this.loanService.createLoan(formData).subscribe({
           next: () => {
-            console.log('Loan created successfully');
-            this.loanForm.reset();
+            this.router.navigate(['/loans']);
           },
           error: (error) => console.error('Error creating loan:', error)
         });
