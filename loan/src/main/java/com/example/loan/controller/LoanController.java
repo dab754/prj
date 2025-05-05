@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = {"http://0.0.0.0:4200", "https://*.repl.co"})
 @RestController
 @RequestMapping("/loans")
 public class LoanController {
