@@ -6,8 +6,8 @@ export interface Loan {
   remainingAmount?: number;
   purpose: string;
   status: string;
+  requestDate?: string;
   freelancer: {
     id: number;
   };
-  requestDate?: string;
 }
