@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { LoanService } from '../../services/loan.service';
 import { Router } from '@angular/router';
+import { Loan } from '../../models/loan.model';
 
 @Component({
   selector: 'app-loan-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './loan-form.component.html',
-  styleUrls: ['./loan-form.component.css']
+  styleUrl: './loan-form.component.scss'
 })
 export class LoanFormComponent implements OnInit {
   @Input() loanId?: number;

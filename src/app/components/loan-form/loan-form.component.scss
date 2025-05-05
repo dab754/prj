@@ -1,51 +1,63 @@
 
 .loan-form-container {
   max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
 }
 
 .form-group {
-  margin-bottom: 20px;
-}
+  margin-bottom: 1.5rem;
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
 
-.form-control {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-}
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
 
-.error {
-  color: #f44336;
-  font-size: 14px;
-  margin-top: 5px;
+    &:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+  }
+
+  .error {
+    color: #f44336;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
 }
 
 .submit-btn {
+  width: 100%;
+  padding: 1rem;
   background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
   border: none;
   border-radius: 4px;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 16px;
-}
 
-.submit-btn:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 
-.submit-btn:hover:not(:disabled) {
-  opacity: 0.9;
+  &:not(:disabled):hover {
+    background-color: #45a049;
+  }
 }
