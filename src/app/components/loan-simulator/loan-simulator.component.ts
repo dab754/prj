@@ -9,7 +9,7 @@ import { LoanService } from '../../services/loan.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './loan-simulator.component.html',
-  styleUrls: ['./loan-simulator.component.css']
+  styleUrl: './loan-simulator.component.scss'
 })
 export class LoanSimulatorComponent {
   simulatorForm: FormGroup;
