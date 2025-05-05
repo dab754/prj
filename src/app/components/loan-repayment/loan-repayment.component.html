@@ -1,0 +1,27 @@
+
+<div class="repayment-container">
+  <h3>Make Repayment</h3>
+  <form [formGroup]="repaymentForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="amount">Repayment Amount</label>
+      <input
+        type="number"
+        id="amount"
+        formControlName="amount"
+        class="form-control"
+        placeholder="Enter amount"
+      >
+      <div class="error" *ngIf="repaymentForm.get('amount')?.invalid && repaymentForm.get('amount')?.touched">
+        Amount is required and must be greater than 0
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="!repaymentForm.valid">
+      Submit Payment
+    </button>
+  </form>
+
+  <div class="message" *ngIf="message">
+    {{ message }}
+  </div>
+</div>
