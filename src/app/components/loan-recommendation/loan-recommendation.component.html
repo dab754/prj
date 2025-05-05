@@ -1,0 +1,28 @@
+
+<div class="recommendation-container">
+  <h2>Loan Recommendation</h2>
+  <form [formGroup]="recommendationForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="income">Monthly Income</label>
+      <input
+        type="number"
+        id="income"
+        formControlName="income"
+        class="form-control"
+        placeholder="Enter your monthly income"
+      >
+      <div class="error" *ngIf="recommendationForm.get('income')?.invalid && recommendationForm.get('income')?.touched">
+        Income is required and must be greater than 0
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" [disabled]="!recommendationForm.valid">
+      Get Recommendation
+    </button>
+  </form>
+
+  <div class="result" *ngIf="recommendation">
+    <h3>Recommendation</h3>
+    <p>{{recommendation}}</p>
+  </div>
+</div>
