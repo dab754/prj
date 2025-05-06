@@ -1,15 +1,15 @@
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { LoanService } from '../../services/loan.service';
 
 @Component({
   selector: 'app-loan-recommendation',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './loan-recommendation.component.html',
-  styleUrl: './loan-recommendation.component.scss'
+  styleUrls: ['./loan-recommendation.component.css']
 })
 export class LoanRecommendationComponent {
   recommendationForm: FormGroup;
@@ -30,10 +30,11 @@ export class LoanRecommendationComponent {
       this.loanService.getRecommendedLoan(income)
         .subscribe({
           next: (result) => {
-            this.recommendation = result;
+            this.recommendation = result.message;
           },
           error: (error) => {
             console.error('Error getting loan recommendation:', error);
+            this.recommendation = 'Error getting loan recommendation. Please try again.';
           }
         });
     }

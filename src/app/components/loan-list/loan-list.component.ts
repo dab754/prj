@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -10,7 +9,7 @@ import { Loan } from '../../models/loan.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './loan-list.component.html',
-  styleUrl: './loan-list.component.scss'
+  styleUrls: ['./loan-list.component.css']
 })
 export class LoanListComponent implements OnInit {
   loans: Loan[] = [];

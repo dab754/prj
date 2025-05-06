@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -8,7 +7,7 @@ import { Loan } from '../models/loan.model';
   providedIn: 'root'
 })
 export class LoanService {
-  private apiUrl = 'http://0.0.0.0:8080/loans';
+  private apiUrl = 'http://localhost:8082/loans';
 
   constructor(private http: HttpClient) { }
 
@@ -47,8 +46,10 @@ export class LoanService {
     return this.http.get<any>(`${this.apiUrl}/${id}/repayment-data`);
   }
 
-  makeRepayment(id: number, amount: number): Observable<any> {
-    const params = new HttpParams().set('amount', amount.toString());
+  makeRepayment(id: number, freelancerId: number, amount: number): Observable<any> {
+    const params = new HttpParams()
+      .set('amount', amount.toString())
+      .set('freelancerId', freelancerId.toString());
     return this.http.post<any>(`${this.apiUrl}/${id}/repay`, null, { params });
   }
 
@@ -60,9 +61,9 @@ export class LoanService {
     return this.http.get<any>(`${this.apiUrl}/simulate`, { params });
   }
 
-  getRecommendedLoan(income: number): Observable<string> {
+  getRecommendedLoan(income: number): Observable<any> {
     const params = new HttpParams().set('income', income.toString());
-    return this.http.get<string>(`${this.apiUrl}/recommend`, { params });
+    return this.http.get<any>(`${this.apiUrl}/recommend`, { params });
   }
 
   applyForLoan(income: number, requestedAmount: number): Observable<string> {

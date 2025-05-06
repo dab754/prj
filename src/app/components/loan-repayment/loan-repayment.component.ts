@@ -1,44 +1,64 @@
-
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { LoanService } from '../../services/loan.service';
 
 @Component({
   selector: 'app-loan-repayment',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './loan-repayment.component.html',
-  styleUrl: './loan-repayment.component.scss'
+  styleUrls: ['./loan-repayment.component.css'],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  standalone: true
 })
-export class LoanRepaymentComponent {
-  @Input() loanId!: number;
+export class LoanRepaymentComponent implements OnInit {
   repaymentForm: FormGroup;
-  message: string = '';
+  loanId: number;
+  freelancerId: number = 1; // Default freelancer ID
+  error: string | null = null;
+  repaymentData: any;
 
   constructor(
     private fb: FormBuilder,
-    private loanService: LoanService
+    private loanService: LoanService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
+    this.loanId = +this.route.snapshot.params['id'];
     this.repaymentForm = this.fb.group({
       amount: ['', [Validators.required, Validators.min(0)]]
     });
   }
 
-  onSubmit() {
+  ngOnInit(): void {
+    this.loadRepaymentData();
+  }
+
+  loadRepaymentData(): void {
+    this.loanService.checkRepaymentData(this.loanId).subscribe({
+      next: (data) => {
+        this.repaymentData = data;
+      },
+      error: (err) => {
+        this.error = 'Failed to load repayment data. Please try again later.';
+        console.error('Error loading repayment data:', err);
+      }
+    });
+  }
+
+  onSubmit(): void {
     if (this.repaymentForm.valid) {
-      const { amount } = this.repaymentForm.value;
-      this.loanService.makeRepayment(this.loanId, amount)
-        .subscribe({
-          next: (response) => {
-            this.message = 'Repayment successful';
-            this.repaymentForm.reset();
-          },
-          error: (error) => {
-            this.message = 'Error processing repayment';
-            console.error('Error:', error);
-          }
-        });
+      const amount = this.repaymentForm.get('amount')?.value;
+      
+      this.loanService.makeRepayment(this.loanId, this.freelancerId, amount).subscribe({
+        next: () => {
+          this.router.navigate(['/loans']);
+        },
+        error: (err) => {
+          this.error = 'Failed to make repayment. Please try again later.';
+          console.error('Error making repayment:', err);
+        }
+      });
     }
   }
-}
+} 

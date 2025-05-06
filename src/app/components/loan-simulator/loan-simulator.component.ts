@@ -1,15 +1,15 @@
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { LoanService } from '../../services/loan.service';
 
 @Component({
   selector: 'app-loan-simulator',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './loan-simulator.component.html',
-  styleUrl: './loan-simulator.component.scss'
+  styleUrls: ['./loan-simulator.component.css']
 })
 export class LoanSimulatorComponent {
   simulatorForm: FormGroup;

@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://0.0.0.0:4200", "https://*.repl.co"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:4201", "http://localhost:4202", "http://localhost:4203", "http://localhost:4204", "http://localhost:4205"})
 @RestController
 @RequestMapping("/loans")
 public class LoanController {
@@ -70,9 +70,12 @@ public class LoanController {
     }
 
     @PostMapping("/{id}/repay")
-    public ResponseEntity<?> makeRepayment(@PathVariable Long id, @RequestParam double amount) {
+    public ResponseEntity<?> makeRepayment(
+            @PathVariable Long id,
+            @RequestParam Long freelancerId,
+            @RequestParam double amount) {
         try {
-            Loan updatedLoan = loanService.makeRepayment(id, amount);
+            Loan updatedLoan = loanService.makeRepayment(id, freelancerId, amount);
             return ResponseEntity.ok(updatedLoan);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -109,9 +112,18 @@ public class LoanController {
     private LoanPredictionService predictionService;
 
     @GetMapping("/recommend")
-    public ResponseEntity<String> recommendMaxLoan(@RequestParam double income) {
-        double maxLoanAmount = predictionService.predictMaxLoanAmount(income);
-        return ResponseEntity.ok("Based on your income, the maximum loan amount you can take is: $" + maxLoanAmount);
+    public ResponseEntity<Map<String, Object>> recommendMaxLoan(@RequestParam double income) {
+        try {
+            double maxLoanAmount = predictionService.predictMaxLoanAmount(income);
+            Map<String, Object> response = new HashMap<>();
+            response.put("maxLoanAmount", maxLoanAmount);
+            response.put("message", String.format("Based on your income, the maximum loan amount you can take is: $%.2f", maxLoanAmount));
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 
     @PostMapping("/apply")

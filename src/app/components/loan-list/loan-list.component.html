@@ -1,40 +1,55 @@
-
-<div class="loan-list-container">
-  <h2>Loans</h2>
-  
-  <div class="error-message" *ngIf="error">
-    {{ error }}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Loans</h2>
+    <div class="btn-group">
+      <button class="btn btn-primary" routerLink="/loans/new">Create New Loan</button>
+      <button class="btn btn-info" routerLink="/simulator">Simulate Loan</button>
+      <button class="btn btn-success" routerLink="/recommendation">Get Recommendation</button>
+    </div>
   </div>
 
-  <table class="loan-table" *ngIf="loans.length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Amount</th>
-        <th>Purpose</th>
-        <th>Status</th>
-        <th>Freelancer ID</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let loan of loans">
-        <td>{{loan.id}}</td>
-        <td>${{loan.amount}}</td>
-        <td>{{loan.purpose}}</td>
-        <td>{{loan.status}}</td>
-        <td>{{loan.freelancer.id}}</td>
-        <td>
-          <a [routerLink]="['/loans', loan.id, 'edit']" class="btn edit">Edit</a>
-          <button (click)="onDelete(loan.id!)" class="btn delete">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="no-loans" *ngIf="loans.length === 0">
-    No loans found.
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Amount</th>
+              <th>Purpose</th>
+              <th>Status</th>
+              <th>Request Date</th>
+              <th>Due Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let loan of loans">
+              <td>{{loan.id}}</td>
+              <td>${{loan.amount | number:'1.2-2'}}</td>
+              <td>{{loan.purpose}}</td>
+              <td>
+                <span [ngClass]="{
+                  'badge bg-warning': loan.status === 'PENDING',
+                  'badge bg-success': loan.status === 'APPROVED',
+                  'badge bg-danger': loan.status === 'REJECTED'
+                }">
+                  {{loan.status}}
+                </span>
+              </td>
+              <td>{{loan.requestDate | date}}</td>
+              <td>{{loan.dueDate | date}}</td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-info" [routerLink]="['/loans', loan.id]">View</button>
+                  <button class="btn btn-sm btn-warning" [routerLink]="['/loans', loan.id, 'edit']">Edit</button>
+                  <button class="btn btn-sm btn-success" [routerLink]="['/loans', loan.id, 'repay']">Repay</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-
-  <a [routerLink]="['/loans/new']" class="btn create">Create New Loan</a>
 </div>

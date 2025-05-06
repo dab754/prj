@@ -1,0 +1,47 @@
+<div class="container mt-4" *ngIf="loan">
+  <div class="card">
+    <div class="card-header">
+      <h2>Loan Details</h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Basic Information</h5>
+          <p><strong>Amount:</strong> ${{loan.amount | number:'1.2-2'}}</p>
+          <p><strong>Purpose:</strong> {{loan.purpose}}</p>
+          <p><strong>Description:</strong> {{loan.description || 'No description provided'}}</p>
+          <p><strong>Status:</strong> {{loan.status}}</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Dates</h5>
+          <p><strong>Request Date:</strong> {{loan.requestDate | date}}</p>
+          <p><strong>Due Date:</strong> {{loan.dueDate | date}}</p>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <h5>Payment Information</h5>
+          <p><strong>Paid Amount:</strong> ${{loan.paidAmount | number:'1.2-2'}}</p>
+          <p><strong>Remaining Amount:</strong> ${{loan.remainingAmount | number:'1.2-2'}}</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Freelancer Information</h5>
+          <p><strong>Name:</strong> {{loan.freelancer.name}}</p>
+          <p><strong>Email:</strong> {{loan.freelancer.email}}</p>
+          <p><strong>Phone:</strong> {{loan.freelancer.phoneNumber}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" routerLink="/loans">Back to List</button>
+      <button class="btn btn-warning ms-2" [routerLink]="['/loans', loan.id, 'edit']">Edit</button>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4" *ngIf="error">
+  <div class="alert alert-danger">
+    {{error}}
+  </div>
+  <button class="btn btn-primary" routerLink="/loans">Back to List</button>
+</div> 

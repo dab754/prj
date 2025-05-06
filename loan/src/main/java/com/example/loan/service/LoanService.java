@@ -8,6 +8,7 @@ import com.example.loan.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import jakarta.annotation.PostConstruct;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +21,21 @@ public class LoanService {
     private LoanRepository loanRepository;
     @Autowired
     private FreelancerRepository freelancerRepository;
+
+    @PostConstruct
+    public void init() {
+        // Check if any freelancers exist
+        if (freelancerRepository.count() == 0) {
+            // Create a default freelancer
+            Freelancer defaultFreelancer = new Freelancer();
+            defaultFreelancer.setName("Default Freelancer");
+            defaultFreelancer.setEmail("default@example.com");
+            defaultFreelancer.setPhoneNumber("1234567890");
+            freelancerRepository.save(defaultFreelancer);
+            System.out.println("Created default freelancer with ID: " + defaultFreelancer.getId());
+        }
+    }
+
     // Get all loans
     public List<Loan> getAllLoans() {
         return loanRepository.findAll();
@@ -41,25 +57,32 @@ public class LoanService {
                 .orElseThrow(() -> new RuntimeException("Freelancer not found"));
 
         loan.setFreelancer(freelancer);
-        loan.setStatus(LoanStatus.PENDING); // Default status
-        loan.setRequestDate(LocalDate.now()); // Set request date automatically
+        loan.setStatus(LoanStatus.PENDING);
+        loan.setRequestDate(LocalDate.now());
+        loan.setPaidAmount(0.0);
+        loan.setRemainingAmount(loan.getAmount());
+
+        // Validate due date
+        if (loan.getDueDate() == null || loan.getDueDate().isBefore(LocalDate.now())) {
+            throw new RuntimeException("Due date must be in the future");
+        }
 
         return loanRepository.save(loan);
     }
 
     // Update an existing loan
     public Loan updateLoan(Long id, Loan loanDetails) {
-        Loan loan = null;
-        try {
-            loan = (Loan) loanRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Loan not found"));
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+        Loan loan = loanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
+
+        // Only allow updating certain fields
         loan.setAmount(loanDetails.getAmount());
         loan.setPurpose(loanDetails.getPurpose());
+        loan.setDescription(loanDetails.getDescription());
+        loan.setDueDate(loanDetails.getDueDate());
         loan.setStatus(loanDetails.getStatus());
-        return (Loan) loanRepository.save(loan);
+
+        return loanRepository.save(loan);
     }
 
     // Delete a loan
@@ -80,13 +103,18 @@ public class LoanService {
         return loanRepository.findAll(spec);
     }
 
-    public Loan makeRepayment(Long loanId, double amount) {
+    public Loan makeRepayment(Long loanId, Long freelancerId, double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Repayment amount must be greater than zero");
         }
 
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Loan not found"));
+
+        // Verify the freelancer owns the loan
+        if (!loan.getFreelancer().getId().equals(freelancerId)) {
+            throw new RuntimeException("This loan does not belong to the specified freelancer");
+        }
 
         double newPaidAmount = loan.getPaidAmount() + amount;
 
@@ -100,7 +128,7 @@ public class LoanService {
 
         // Mark loan as completed if fully repaid
         if (loan.getRemainingAmount() == 0) {
-            loan.setStatus(LoanStatus.APPROVED); // Or add a new status COMPLETED
+            loan.setStatus(LoanStatus.APPROVED);
         }
 
         return loanRepository.save(loan);
